@@ -26,6 +26,7 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 //  routers
+const twoPictureRouter = require("./routes/twoPictureRoutes");
 
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
@@ -42,6 +43,10 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(fileUpload({ useTempFiles: true }));
 
 //app.use("api/v1") stuff will come here
+app.use("/api/v1/twoPicture", twoPictureRouter);
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3002;
 const start = async () => {
