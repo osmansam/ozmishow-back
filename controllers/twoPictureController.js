@@ -5,8 +5,8 @@ const CustomError = require("../errors");
 // get two pictures by page
 const getPageTwoPictures = async (req, res) => {
   const { page } = req.params;
-  const twoPictures = await TwoPicture.find({ page: page });
-  res.status(StatusCodes.OK).json({ twoPictures });
+  const data = await TwoPicture.find({ page: page });
+  res.status(StatusCodes.OK).json({ data });
 };
 // create two pictures
 const createTwoPictures = async (req, res) => {
