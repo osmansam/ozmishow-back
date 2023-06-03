@@ -1,0 +1,11 @@
+const mongoose = require("mongoose");
+
+const ExplanationBarSchema = new mongoose.Schema({
+  img: { type: String },
+  header: { type: String },
+  paragraphs: { type: [String] },
+  buttons: { type: [] },
+  mainHeader: { type: String },
+});
+
+module.exports = mongoose.model("ExplanationBar", ExplanationBarSchema);

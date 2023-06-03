@@ -5,13 +5,17 @@ const {
   getPageTwoPictures,
   createTwoPictures,
   updateTwoPictures,
-  updateNewsContainer,
+  addItemContainer,
   deleteTwoPictures,
+  addExplanationBar,
+  deleteItemInContainer,
 } = require("../controllers/twoPictureController");
 
 router.route("/:page").get(getPageTwoPictures);
 router.route("/").post(createTwoPictures);
-router.route("/updateContainer/:id").patch(updateNewsContainer);
+router.route("/updateContainer/:id").patch(addItemContainer);
+router.route("/updateExplanationBar/:id").patch(addExplanationBar);
+router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
 
 module.exports = router;
