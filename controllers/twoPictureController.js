@@ -1,9 +1,10 @@
 const TwoPicture = require("../models/TwoPicture");
 const Picture = require("../models/Picture");
 const ExplanationBar = require("../models/Explanation");
+const WorkTeam = require("../models/WorkTeam");
 const { StatusCodes } = require("http-status-codes");
-const ObjectId = require("mongoose").Types.ObjectId;
 const CustomError = require("../errors");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 // get two pictures by page
 const getPageTwoPictures = async (req, res) => {
@@ -96,26 +97,53 @@ const addExplanationBar = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
-//delete item from Container
-const deleteItemInContainer = async (req, res) => {
-  const { id: twoPicturesId, itemId } = req.params;
+//Add items into WorkTeam
+const addWorkTeamBar = async (req, res) => {
+  const { id: twoPicturesId } = req.params;
   const twoPictures = await TwoPicture.findById(twoPicturesId);
   if (!twoPictures) {
     throw new CustomError.NotFoundError(
       `No two pictures with id: ${twoPicturesId}`
     );
   }
-  const itemIdObj = ObjectId(itemId); // Convert itemId to ObjectId
-
-  const index = twoPictures.twoPictureArray.findIndex((item) => {
-    return item._id.equals(itemIdObj); // Use the equals() method to compare ObjectId values
+  const { container } = req.body;
+  const newWorkTeams = container.map((item) => {
+    const { img, subHeaders, paragraphs, mainHeader } = item;
+    // Define the new explanation object
+    const newWorkTeam = new WorkTeam({
+      img: img,
+      mainHeader: mainHeader,
+      subHeaders: subHeaders,
+      paragraphs: paragraphs,
+    });
+    return newWorkTeam;
   });
 
-  if (index !== -1) {
-    twoPictures.twoPictureArray.splice(index, 1);
-  }
+  // Push the new work teams to the twoPictureArray
+  twoPictures.twoPictureArray.push(...newWorkTeams);
 
   await twoPictures.save();
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+
+//delete item from Container
+const deleteItemInContainer = async (req, res) => {
+  const { id: twoPicturesId, itemId } = req.params;
+
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  console.log(twoPictures.twoPictureArray);
+  twoPictures.twoPictureArray = twoPictures.twoPictureArray.filter(
+    (item) => item._id?.toString() !== itemId
+  );
+
+  await twoPictures.save();
+
   res.status(StatusCodes.OK).json({ message: "item deleted successfully" });
 };
 module.exports = {
@@ -125,5 +153,6 @@ module.exports = {
   deleteTwoPictures,
   addItemContainer,
   addExplanationBar,
+  addWorkTeamBar,
   deleteItemInContainer,
 };
