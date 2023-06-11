@@ -146,6 +146,35 @@ const deleteItemInContainer = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ message: "item deleted successfully" });
 };
+//update page and language
+const updatePageAndLanguage = async (req, res) => {
+  const { id: twoPicturesId } = req.params;
+  const { page, language } = req.body;
+
+  const positionFind = await TwoPicture.find({
+    page: page,
+    language: language,
+  });
+
+  const twoPictures = await TwoPicture.findOneAndUpdate(
+    { _id: twoPicturesId },
+    {
+      ...req.body,
+      page: page,
+      language: language,
+      position: positionFind?.length ?? 0,
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id : ${twoPicturesId}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ twoPictures });
+};
+
 module.exports = {
   getPageTwoPictures,
   createTwoPictures,
@@ -155,4 +184,5 @@ module.exports = {
   addExplanationBar,
   addWorkTeamBar,
   deleteItemInContainer,
+  updatePageAndLanguage,
 };

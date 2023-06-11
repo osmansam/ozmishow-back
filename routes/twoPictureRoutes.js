@@ -10,6 +10,7 @@ const {
   addExplanationBar,
   addWorkTeamBar,
   deleteItemInContainer,
+  updatePageAndLanguage,
 } = require("../controllers/twoPictureController");
 
 router.route("/:page").get(getPageTwoPictures);
@@ -17,6 +18,7 @@ router.route("/").post(createTwoPictures);
 router.route("/updateContainer/:id").patch(addItemContainer);
 router.route("/updateExplanationBar/:id").patch(addExplanationBar);
 router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
+router.route("/updatePageAndLanguage/:id").patch(updatePageAndLanguage);
 router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
 
