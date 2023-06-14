@@ -5,6 +5,10 @@ const PageOptionsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isNavbar: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("PageOptions", PageOptionsSchema);
