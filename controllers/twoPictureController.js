@@ -174,6 +174,32 @@ const updatePageAndLanguage = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ twoPictures });
 };
+//get single new
+const getSingleNew = async (req, res) => {
+  const { twoPicturesId, id } = req.params;
+
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  console.log(twoPictures);
+  var news = {};
+  if (!id || id === "undefined") {
+    news = twoPictures.twoPictureArray[0];
+  } else {
+    news = await twoPictures.twoPictureArray.find((item) => item._id === id);
+  }
+  if (!news) {
+    news = await twoPictures.twoPictureArray.find((item) => {
+      const itemId = new ObjectId(item._id);
+      return itemId.equals(id);
+    });
+  }
+
+  if (!news) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id : ${twoPicturesId}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ news });
+};
 
 module.exports = {
   getPageTwoPictures,
@@ -185,4 +211,5 @@ module.exports = {
   addWorkTeamBar,
   deleteItemInContainer,
   updatePageAndLanguage,
+  getSingleNew,
 };
