@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const PageOptionsSchema = new mongoose.Schema({
-  pageName: {
+  pageNameTR: {
+    type: String,
+    required: true,
+  },
+  pageNameEN: {
     type: String,
     required: true,
   },
