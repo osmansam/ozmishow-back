@@ -5,6 +5,7 @@ const PictureSchema = new mongoose.Schema({
   header: { type: String },
   paragraphs: { type: [String] },
   buttons: { type: [] },
+  date: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Picture", PictureSchema);

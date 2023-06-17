@@ -12,16 +12,20 @@ const {
   deleteItemInContainer,
   updatePageAndLanguage,
   getSingleNew,
+  createMap,
+  getMap,
 } = require("../controllers/twoPictureController");
 
-router.route("/:page").get(getPageTwoPictures);
 router.route("/").post(createTwoPictures);
+router.route("/createMap").post(createMap);
+router.route("/getMap").get(getMap);
 router.route("/updateContainer/:id").patch(addItemContainer);
 router.route("/updateExplanationBar/:id").patch(addExplanationBar);
 router.route("/getSingleNew/:twoPicturesId/:id").get(getSingleNew);
 router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
 router.route("/updatePageAndLanguage/:id").patch(updatePageAndLanguage);
 router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
+router.route("/:page").get(getPageTwoPictures);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
 
 module.exports = router;
