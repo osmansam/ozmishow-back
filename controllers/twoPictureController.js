@@ -5,7 +5,7 @@ const WorkTeam = require("../models/WorkTeam");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const ObjectId = require("mongoose").Types.ObjectId;
-
+const Map = require("../models/Map");
 // get two pictures by page
 const getPageTwoPictures = async (req, res) => {
   const { page } = req.params;
@@ -179,7 +179,7 @@ const getSingleNew = async (req, res) => {
   const { twoPicturesId, id } = req.params;
 
   const twoPictures = await TwoPicture.findById(twoPicturesId);
-  console.log(twoPictures);
+
   var news = {};
   if (!id || id === "undefined") {
     news = twoPictures.twoPictureArray[0];
@@ -200,7 +200,17 @@ const getSingleNew = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ news });
 };
-
+//create Map
+const createMap = async (req, res) => {
+  await Map.deleteMany({});
+  const map = await Map.create(req.body);
+  res.status(StatusCodes.CREATED).json({ map });
+};
+//get Map
+const getMap = async (req, res) => {
+  const map = await Map.find({});
+  res.status(StatusCodes.OK).json({ map });
+};
 module.exports = {
   getPageTwoPictures,
   createTwoPictures,
@@ -212,4 +222,6 @@ module.exports = {
   deleteItemInContainer,
   updatePageAndLanguage,
   getSingleNew,
+  createMap,
+  getMap,
 };
