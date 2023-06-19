@@ -14,12 +14,16 @@ const {
   getSingleNew,
   createMap,
   getMap,
+  searchNews,
+  getNews,
 } = require("../controllers/twoPictureController");
 
 router.route("/").post(createTwoPictures);
 router.route("/createMap").post(createMap);
 router.route("/getMap").get(getMap);
 router.route("/updateContainer/:id").patch(addItemContainer);
+router.route("/getNews/:id").get(getNews);
+router.route("/searchNews/:id").get(searchNews);
 router.route("/updateExplanationBar/:id").patch(addExplanationBar);
 router.route("/getSingleNew/:twoPicturesId/:id").get(getSingleNew);
 router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
