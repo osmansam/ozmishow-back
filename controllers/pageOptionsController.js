@@ -1,9 +1,11 @@
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const PageOptions = require("../models/PageOptions");
+const TwoPicture = require("../models/TwoPicture");
 const Navbar = require("../models/Navbar");
 const Footer = require("../models/Footer");
 const { deleteMany } = require("../models/Picture");
+const { set } = require("mongoose");
 // get all page options
 const getPageOptions = async (req, res) => {
   const pageOptions = await PageOptions.find({});
@@ -37,6 +39,35 @@ const getFooter = async (req, res) => {
   const footer = await Footer.find({});
   res.status(StatusCodes.OK).json({ footer });
 };
+//detele page
+const deletePage = async (req, res) => {
+  const { id } = req.params;
+  const page = await PageOptions.findByIdAndDelete({
+    _id: id,
+  });
+
+  const twoPicture = await TwoPicture.deleteMany({
+    page: page.pageNameEN,
+  }).exec();
+
+  const subPages = await PageOptions.find({
+    motherPageEN: page.pageNameEN,
+  });
+
+  const deletedSubPages = await PageOptions.deleteMany({
+    motherPageEN: page.pageNameEN,
+  });
+  subPages.forEach(async (subPage) => {
+    const twoPictures = await TwoPicture.deleteMany({
+      page: subPage.pageNameEN,
+    });
+  });
+
+  if (!page) {
+    throw new CustomError.NotFoundError(`No page with id : ${id}`);
+  }
+  res.status(StatusCodes.OK).send();
+};
 
 module.exports = {
   getPageOptions,
@@ -45,4 +76,5 @@ module.exports = {
   getNavbar,
   createFooter,
   getFooter,
+  deletePage,
 };
