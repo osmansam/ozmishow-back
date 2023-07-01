@@ -139,7 +139,6 @@ const deleteItemInContainer = async (req, res) => {
       `No two pictures with id: ${twoPicturesId}`
     );
   }
-  console.log(twoPictures.twoPictureArray);
   twoPictures.twoPictureArray = twoPictures.twoPictureArray.filter(
     (item) => item._id?.toString() !== itemId
   );
