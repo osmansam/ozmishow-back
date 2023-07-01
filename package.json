@@ -30,7 +30,7 @@
     "nodemon": "^2.0.9"
   },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
