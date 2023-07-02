@@ -3,6 +3,7 @@ require("express-async-errors");
 
 // express
 const express = require("express");
+const path = require("path");
 const app = express();
 
 // rest of the packages
@@ -31,7 +32,7 @@ const pageOptionsRouter = require("./routes/pageOptionsRoute");
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-
+app.use(express.static(path.join(__dirname, "build")));
 app.use(helmet());
 app.use(cors());
 app.use(xss());
