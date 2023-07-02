@@ -46,6 +46,11 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use("/api/v1/twoPicture", twoPictureRouter);
 app.use("/api/v1/pageOptions", pageOptionsRouter);
 
+// Handle client-side routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
