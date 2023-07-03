@@ -29,6 +29,7 @@ cloudinary.config({
 //  routers
 const twoPictureRouter = require("./routes/twoPictureRoutes");
 const pageOptionsRouter = require("./routes/pageOptionsRoute");
+const authRouter = require("./routes/authRoutes");
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -46,6 +47,7 @@ app.use(fileUpload({ useTempFiles: true }));
 //app.use("api/v1") stuff will come here
 app.use("/api/v1/twoPicture", twoPictureRouter);
 app.use("/api/v1/pageOptions", pageOptionsRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Handle client-side routing
 app.get("*", (req, res) => {
