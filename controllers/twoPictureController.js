@@ -4,6 +4,7 @@ const ExplanationBar = require("../models/Explanation");
 const WorkTeam = require("../models/WorkTeam");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const Slider = require("../models/Slider");
 const ObjectId = require("mongoose").Types.ObjectId;
 const Map = require("../models/Map");
 const { paginate } = require("../utils/pagination");
@@ -123,6 +124,48 @@ const addWorkTeamBar = async (req, res) => {
 
   // Push the new work teams to the twoPictureArray
   twoPictures.twoPictureArray.push(...newWorkTeams);
+
+  await twoPictures.save();
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+//Add items into WorkTeam
+const addSlider = async (req, res) => {
+  const { id: twoPicturesId } = req.params;
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  const { container } = req.body;
+  const newSliders = container.map((item) => {
+    const {
+      img,
+      header,
+      paragraphs,
+      buttons,
+      mainHeader,
+      name,
+      lastName,
+      title,
+    } = item;
+    // Define the new slider object
+    const newSlider = new Slider({
+      img: img,
+      mainHeader: mainHeader,
+      header: header,
+      paragraphs: paragraphs,
+      buttons: buttons,
+      name: name,
+      lastName: lastName,
+      title: title,
+    });
+    return newSlider;
+  });
+
+  // Push the new work teams to the twoPictureArray
+  twoPictures.twoPictureArray.push(...newSliders);
 
   await twoPictures.save();
 
@@ -260,6 +303,7 @@ module.exports = {
   addItemContainer,
   addExplanationBar,
   addWorkTeamBar,
+  addSlider,
   deleteItemInContainer,
   updatePageAndLanguage,
   getSingleNew,

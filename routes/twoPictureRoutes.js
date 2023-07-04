@@ -9,6 +9,7 @@ const {
   deleteTwoPictures,
   addExplanationBar,
   addWorkTeamBar,
+  addSlider,
   deleteItemInContainer,
   updatePageAndLanguage,
   getSingleNew,
@@ -25,6 +26,7 @@ router.route("/updateContainer/:id").patch(addItemContainer);
 router.route("/getNews/:id").get(getNews);
 router.route("/searchNews/:id").get(searchNews);
 router.route("/updateExplanationBar/:id").patch(addExplanationBar);
+router.route("/updateSlider/:id").patch(addSlider);
 router.route("/getSingleNew/:twoPicturesId/:id").get(getSingleNew);
 router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
 router.route("/updatePageAndLanguage/:id").patch(updatePageAndLanguage);
