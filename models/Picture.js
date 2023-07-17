@@ -5,6 +5,7 @@ const PictureSchema = new mongoose.Schema({
   header: { type: String },
   paragraphs: { type: [String] },
   buttons: { type: [] },
+  percentage: { type: Number },
   date: { type: Date, default: Date.now },
 });
 
