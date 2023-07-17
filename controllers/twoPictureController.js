@@ -100,6 +100,33 @@ const addExplanationBar = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
+//Add items into ProgressBar
+const addProgressBar = async (req, res) => {
+  const { id: twoPicturesId } = req.params;
+  const { container } = req.body;
+  const { img, header, paragraphs, mainHeader, percentage } = container[0];
+  // Define the new explanation object
+  const newExplain = new ExplanationBar({
+    img: img,
+    mainHeader: mainHeader,
+    header: header,
+    paragraphs: paragraphs,
+    percentage: percentage,
+  });
+
+  // Retrieve the TwoPicture document and update twoPictureArray
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+
+  twoPictures.twoPictureArray.push(newExplain);
+  await twoPictures.save();
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
 //Add items into WorkTeam
 const addWorkTeamBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
@@ -302,6 +329,7 @@ module.exports = {
   deleteTwoPictures,
   addItemContainer,
   addExplanationBar,
+  addProgressBar,
   addWorkTeamBar,
   addSlider,
   deleteItemInContainer,
