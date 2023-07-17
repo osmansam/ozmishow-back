@@ -5,6 +5,7 @@ const ExplanationBarSchema = new mongoose.Schema({
   header: { type: String },
   paragraphs: { type: [String] },
   buttons: { type: [] },
+  percentage: { type: Number },
   mainHeader: { type: String },
 });
 
