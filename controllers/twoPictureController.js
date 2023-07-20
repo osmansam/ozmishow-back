@@ -2,6 +2,7 @@ const TwoPicture = require("../models/TwoPicture");
 const Picture = require("../models/Picture");
 const ExplanationBar = require("../models/Explanation");
 const WorkTeam = require("../models/WorkTeam");
+const ResumeBox = require("../models/ResumeBox");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const Slider = require("../models/Slider");
@@ -123,6 +124,34 @@ const addProgressBar = async (req, res) => {
   }
 
   twoPictures.twoPictureArray.push(newExplain);
+  await twoPictures.save();
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+//Add items into ResumeBox
+const addResumeBox = async (req, res) => {
+  const { id: twoPicturesId } = req.params;
+  const { container } = req.body;
+  const { header, year1, year2, university, paragraph } = container[0];
+  console.log(container[0]);
+  // Define the new ResumeBox object
+  const newResume = new ResumeBox({
+    header: header,
+    year1: year1,
+    year2: year2,
+    university: university,
+    paragraph: paragraph,
+  });
+
+  // Retrieve the TwoPicture document and update twoPictureArray
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+
+  twoPictures.twoPictureArray.push(newResume);
   await twoPictures.save();
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
@@ -331,6 +360,7 @@ module.exports = {
   addExplanationBar,
   addProgressBar,
   addWorkTeamBar,
+  addResumeBox,
   addSlider,
   deleteItemInContainer,
   updatePageAndLanguage,
