@@ -105,7 +105,8 @@ const addExplanationBar = async (req, res) => {
 const addProgressBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
   const { container } = req.body;
-  const { img, header, paragraphs, mainHeader, percentage } = container[0];
+  const { img, header, paragraphs, mainHeader, percentage, icon, paragraph } =
+    container[0];
   // Define the new explanation object
   const newExplain = new ExplanationBar({
     img: img,
@@ -113,6 +114,8 @@ const addProgressBar = async (req, res) => {
     header: header,
     paragraphs: paragraphs,
     percentage: percentage,
+    icon: icon,
+    paragraph: paragraph,
   });
 
   // Retrieve the TwoPicture document and update twoPictureArray

@@ -7,6 +7,8 @@ const ExplanationBarSchema = new mongoose.Schema({
   buttons: { type: [] },
   percentage: { type: Number },
   mainHeader: { type: String },
+  icon: { type: String },
+  paragraph: { type: String },
 });
 
 module.exports = mongoose.model("ExplanationBar", ExplanationBarSchema);
