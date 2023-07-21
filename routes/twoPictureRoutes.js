@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getPageTwoPictures,
+  getPageThreePictures,
   createTwoPictures,
   updateTwoPictures,
   addItemContainer,
@@ -19,9 +20,10 @@ const {
   getMap,
   searchNews,
   getNews,
+  getAllTwoPictures,
 } = require("../controllers/twoPictureController");
 
-router.route("/").post(createTwoPictures);
+router.route("/").post(createTwoPictures).get(getAllTwoPictures);
 router.route("/createMap").post(createMap);
 router.route("/getMap").get(getMap);
 router.route("/updateContainer/:id").patch(addItemContainer);

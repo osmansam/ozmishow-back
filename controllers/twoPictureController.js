@@ -16,6 +16,11 @@ const getPageTwoPictures = async (req, res) => {
   const data = await TwoPicture.find({ page: page });
   res.status(StatusCodes.OK).json({ data });
 };
+//get all two pictures
+const getAllTwoPictures = async (req, res) => {
+  const data = await TwoPicture.find({});
+  res.status(StatusCodes.OK).json({ data });
+};
 // create two pictures
 const createTwoPictures = async (req, res) => {
   const twoPictures = await TwoPicture.create(req.body);
@@ -356,6 +361,7 @@ const getNews = async (req, res) => {
 
 module.exports = {
   getPageTwoPictures,
+  getAllTwoPictures,
   createTwoPictures,
   updateTwoPictures,
   deleteTwoPictures,
