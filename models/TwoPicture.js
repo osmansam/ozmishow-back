@@ -5,6 +5,9 @@ const TwoPictureSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  selectedSection: {
+    type: String,
+  },
   mainHeader: { type: String },
   componentName: { type: String },
   position: { type: Number, required: true },
