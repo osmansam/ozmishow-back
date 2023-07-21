@@ -29,6 +29,13 @@ const PageOptionsSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  isSectionPage: {
+    type: Boolean,
+    required: true,
+  },
+  sections: {
+    type: [String],
+  },
 });
 
 module.exports = mongoose.model("PageOptions", PageOptionsSchema);
