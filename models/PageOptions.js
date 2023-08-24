@@ -35,6 +35,11 @@ const PageOptionsSchema = new mongoose.Schema({
   },
   sections: {
     type: [String],
+    required: false,
+  },
+  sectionPageType: {
+    type: String,
+    required: false,
   },
 });
 
