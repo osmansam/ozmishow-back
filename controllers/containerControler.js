@@ -79,7 +79,6 @@ const deleteContainer = async (req, res) => {
 
   // Retrieve the twoPictures associated with this container
   const twoPicturesToDelete = container.twoPictures;
-  console.log(twoPicturesToDelete);
   // Delete all the twoPictures associated with this container from the database
   await TwoPicture.deleteMany({ _id: { $in: twoPicturesToDelete } });
 
