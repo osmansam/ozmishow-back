@@ -1,14 +1,30 @@
 const mongoose = require("mongoose");
+const ElementStyle = require("./ElementStyle");
 
 const ExplanationBarSchema = new mongoose.Schema({
   img: { type: String },
-  header: { type: String },
-  paragraphs: { type: [String] },
-  buttons: { type: [] },
+  mainHeader: {
+    content: { type: String },
+    style: ElementStyle.schema, // Use ElementStyle schema for style
+  },
+  header: {
+    content: { type: String },
+    style: ElementStyle.schema, // Use ElementStyle schema for style
+  },
+  paragraphs: [String],
+  paragraphStyle: ElementStyle.schema, // Common style for all paragraphs}
+  buttons: [
+    {
+      content: { type: String },
+      style: ElementStyle.schema, // Use ElementStyle schema for style
+    },
+  ],
   percentage: { type: Number },
-  mainHeader: { type: String },
   icon: { type: String },
-  paragraph: { type: String },
+  paragraph: {
+    content: { type: String },
+    style: ElementStyle.schema, // Use ElementStyle schema for style
+  },
 });
 
 module.exports = mongoose.model("ExplanationBar", ExplanationBarSchema);

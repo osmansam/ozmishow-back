@@ -12,9 +12,7 @@ const TwoPictureSchema = new mongoose.Schema({
   componentName: { type: String },
   position: { type: Number, required: true },
   language: { type: String, required: true },
-  twoPictureArray: {
-    type: [],
-  },
+  twoPictureArray: [mongoose.Schema.Types.Mixed],
 });
 
 module.exports = mongoose.model("TwoPicture", TwoPictureSchema);

@@ -3,7 +3,6 @@ const router = express.Router();
 
 const {
   getPageTwoPictures,
-  getPageThreePictures,
   createTwoPictures,
   updateTwoPictures,
   addItemContainer,
@@ -21,6 +20,7 @@ const {
   searchNews,
   getNews,
   getAllTwoPictures,
+  editExplanationBar,
 } = require("../controllers/twoPictureController");
 
 router.route("/").post(createTwoPictures).get(getAllTwoPictures);
@@ -37,6 +37,9 @@ router.route("/getSingleNew/:twoPicturesId/:id").get(getSingleNew);
 router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
 router.route("/updatePageAndLanguage/:id").patch(updatePageAndLanguage);
 router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
+router
+  .route("/editExplanationBar/:twoPicturesId/:explanationBarId")
+  .patch(editExplanationBar);
 router.route("/:page").get(getPageTwoPictures);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
 
