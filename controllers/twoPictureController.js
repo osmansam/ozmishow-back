@@ -106,6 +106,57 @@ const addExplanationBar = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
+//edit explanation bar
+const editExplanationBar = async (req, res) => {
+  const { twoPicturesId, explanationBarId } = req.params;
+  const { img, header, paragraphs, mainHeader, paragraphStyle, buttons } =
+    req.body.container[0];
+  // Retrieve the TwoPicture document
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+
+  // Find the ExplanationBar item to be edited in the twoPictureArray
+  const explanationBarIndex = twoPictures.twoPictureArray.findIndex(
+    (item) => item._id.toString() === explanationBarId
+  );
+
+  if (explanationBarIndex === -1) {
+    throw new CustomError.NotFoundError(
+      `No ExplanationBar with id: ${explanationBarId}`
+    );
+  }
+
+  // Update the properties of the ExplanationBar
+  twoPictures.twoPictureArray[explanationBarIndex].img = img;
+  mainHeader
+    ? (twoPictures.twoPictureArray[explanationBarIndex].mainHeader = mainHeader)
+    : twoPictures.twoPictureArray[explanationBarIndex].mainHeader;
+  header
+    ? (twoPictures.twoPictureArray[explanationBarIndex].header = header)
+    : twoPictures.twoPictureArray[explanationBarIndex].header;
+  buttons
+    ? (twoPictures.twoPictureArray[explanationBarIndex].buttons = buttons)
+    : twoPictures.twoPictureArray[explanationBarIndex].buttons;
+  paragraphs
+    ? (twoPictures.twoPictureArray[explanationBarIndex].paragraphs = paragraphs)
+    : twoPictures.twoPictureArray[explanationBarIndex].paragraphs;
+  paragraphStyle
+    ? (twoPictures.twoPictureArray[explanationBarIndex].paragraphStyle =
+        paragraphStyle)
+    : twoPictures.twoPictureArray[explanationBarIndex].paragraphStyle;
+
+  await TwoPicture.findByIdAndUpdate(twoPicturesId, twoPictures, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+
 //Add items into ProgressBar
 const addProgressBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
@@ -378,4 +429,5 @@ module.exports = {
   getMap,
   searchNews,
   getNews,
+  editExplanationBar,
 };
