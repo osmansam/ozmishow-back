@@ -109,8 +109,8 @@ const addExplanationBar = async (req, res) => {
 //edit explanation bar
 const editExplanationBar = async (req, res) => {
   const { twoPicturesId, explanationBarId } = req.params;
-  const { img, header, paragraphs, mainHeader, paragraphStyle, buttons } =
-    req.body.container[0];
+  const { container } = req.body;
+
   // Retrieve the TwoPicture document
   const twoPictures = await TwoPicture.findById(twoPicturesId);
   if (!twoPictures) {
@@ -129,26 +129,16 @@ const editExplanationBar = async (req, res) => {
       `No ExplanationBar with id: ${explanationBarId}`
     );
   }
-
-  // Update the properties of the ExplanationBar
-  twoPictures.twoPictureArray[explanationBarIndex].img = img;
-  mainHeader
-    ? (twoPictures.twoPictureArray[explanationBarIndex].mainHeader = mainHeader)
-    : twoPictures.twoPictureArray[explanationBarIndex].mainHeader;
-  header
-    ? (twoPictures.twoPictureArray[explanationBarIndex].header = header)
-    : twoPictures.twoPictureArray[explanationBarIndex].header;
-  buttons
-    ? (twoPictures.twoPictureArray[explanationBarIndex].buttons = buttons)
-    : twoPictures.twoPictureArray[explanationBarIndex].buttons;
-  paragraphs
-    ? (twoPictures.twoPictureArray[explanationBarIndex].paragraphs = paragraphs)
-    : twoPictures.twoPictureArray[explanationBarIndex].paragraphs;
-  paragraphStyle
-    ? (twoPictures.twoPictureArray[explanationBarIndex].paragraphStyle =
-        paragraphStyle)
-    : twoPictures.twoPictureArray[explanationBarIndex].paragraphStyle;
-
+  // If effectAll is false, update the style of the specific elementBar
+  if (!container[0].style.effectAll) {
+    twoPictures.twoPictureArray[explanationBarIndex] = container[0];
+  } else {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].style = container[0].style;
+    }
+    twoPictures.twoPictureArray[explanationBarIndex].content =
+      container[0].content;
+  }
   await TwoPicture.findByIdAndUpdate(twoPicturesId, twoPictures, {
     new: true,
     runValidators: true,

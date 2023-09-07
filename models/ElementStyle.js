@@ -7,6 +7,7 @@ const ElementStyleSchema = new mongoose.Schema({
   padding: { type: String },
   fontSize: { type: String },
   fontFamily: { type: String },
+  effectAll: { type: Boolean },
 });
 
 module.exports = mongoose.model("ElementStyle", ElementStyleSchema);
