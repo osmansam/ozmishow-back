@@ -85,6 +85,7 @@ const addExplanationBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
   const { container } = req.body;
   const { img, header, paragraphs, mainHeader } = container[0];
+  console.log(container[0]);
   // Define the new explanation object
   const newExplain = new ExplanationBar({
     img: img,
@@ -130,7 +131,6 @@ const editExplanationBar = async (req, res) => {
       `No ExplanationBar with id: ${explanationBarId}`
     );
   }
-  // If effectAll is false, update the style of the specific elementBar
 
   if (header?.style?.effectAll) {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
@@ -210,7 +210,7 @@ const addResumeBox = async (req, res) => {
   const { id: twoPicturesId } = req.params;
   const { container } = req.body;
   const { header, year1, year2, university, paragraph } = container[0];
-  console.log(container[0]);
+
   // Define the new ResumeBox object
   const newResume = new ResumeBox({
     header: header,
