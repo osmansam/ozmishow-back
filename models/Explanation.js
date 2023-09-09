@@ -11,8 +11,10 @@ const ExplanationBarSchema = new mongoose.Schema({
     content: { type: String },
     style: ElementStyle.schema, // Use ElementStyle schema for style
   },
-  paragraphs: [String],
-  paragraphStyle: ElementStyle.schema, // Common style for all paragraphs}
+  paragraphs: {
+    content: [String],
+    style: ElementStyle.schema, // Common style for all paragraphs},
+  },
   buttons: [
     {
       content: { type: String },
