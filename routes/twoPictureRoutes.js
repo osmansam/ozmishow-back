@@ -21,6 +21,8 @@ const {
   getNews,
   getAllTwoPictures,
   editExplanationBar,
+  editWorkTeamBar,
+  editTwoPictureStyle,
 } = require("../controllers/twoPictureController");
 
 router.route("/").post(createTwoPictures).get(getAllTwoPictures);
@@ -40,6 +42,10 @@ router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
 router
   .route("/editExplanationBar/:twoPicturesId/:explanationBarId")
   .patch(editExplanationBar);
+router
+  .route("/editWorkTeamBar/:twoPicturesId/:workTeamBarId")
+  .patch(editWorkTeamBar);
+router.route("/editTwoPictureStyle/:twoPicturesId/").patch(editTwoPictureStyle);
 router.route("/:page").get(getPageTwoPictures);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
 

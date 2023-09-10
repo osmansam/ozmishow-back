@@ -85,7 +85,6 @@ const addExplanationBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
   const { container } = req.body;
   const { img, header, paragraphs, mainHeader } = container[0];
-  console.log(container[0]);
   // Define the new explanation object
   const newExplain = new ExplanationBar({
     img: img,
@@ -144,11 +143,9 @@ const editExplanationBar = async (req, res) => {
         ? (twoPictures.twoPictureArray[i].mainHeader.style = mainHeader.style)
         : twoPictures.twoPictureArray[i].mainHeader.style;
     }
-  } else if (paragraphs?.style?.effectAll) {
+  } else if (paragraphs && paragraphs?.style?.effectAll) {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
-      paragraphs
-        ? (twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style)
-        : twoPictures.twoPictureArray[i].paragraphs.style;
+      twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
     }
   }
   img
@@ -174,7 +171,127 @@ const editExplanationBar = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
+// edit two picture for style
+const editTwoPictureStyle = async (req, res) => {
+  const { twoPicturesId } = req.params;
+  const { container } = req.body;
 
+  const { img, header, paragraphs, mainHeader, buttons } = container[0];
+
+  // Retrieve the TwoPicture document
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  if (header?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      header
+        ? (twoPictures.twoPictureArray[i].header.style = header.style)
+        : twoPictures.twoPictureArray[i].header.style;
+    }
+  } else if (mainHeader?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      mainHeader
+        ? (twoPictures.twoPictureArray[i].mainHeader.style = mainHeader.style)
+        : twoPictures.twoPictureArray[i].mainHeader.style;
+    }
+  } else if (paragraphs && paragraphs?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
+    }
+  }
+  img
+    ? (twoPictures.twoPictureArray[0].img = img)
+    : twoPictures.twoPictureArray[0].img;
+  mainHeader
+    ? (twoPictures.twoPictureArray[0].mainHeader = mainHeader)
+    : twoPictures.twoPictureArray[0].mainHeader;
+  header
+    ? (twoPictures.twoPictureArray[0].header = header)
+    : twoPictures.twoPictureArray[0].header;
+  buttons
+    ? (twoPictures.twoPictureArray[0].buttons = buttons)
+    : twoPictures.twoPictureArray[0].buttons;
+  paragraphs
+    ? (twoPictures.twoPictureArray[0].paragraphs = paragraphs)
+    : twoPictures.twoPictureArray[0].paragraphs;
+
+  await TwoPicture.findByIdAndUpdate(twoPicturesId, twoPictures, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+
+//edit workTeam bar
+const editWorkTeamBar = async (req, res) => {
+  const { twoPicturesId, workTeamBarId } = req.params;
+  const { img, subHeaders, paragraphs, mainHeader, buttons } =
+    req.body.container[0];
+
+  // Retrieve the TwoPicture document
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  // Find the WorkTeamBar item to be edited in the twoPictureArray
+  const workTeamBarIndex = twoPictures.twoPictureArray.findIndex(
+    (item) => item._id.toString() === workTeamBarId
+  );
+
+  if (subHeaders === -1) {
+    throw new CustomError.NotFoundError(
+      `No workTeamBar with id: ${workTeamBarId}`
+    );
+  }
+
+  if (subHeaders?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      subHeaders
+        ? (twoPictures.twoPictureArray[i].subHeaders.style = subHeaders.style)
+        : twoPictures.twoPictureArray[i].subHeaders.style;
+    }
+  } else if (mainHeader?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      mainHeader
+        ? (twoPictures.twoPictureArray[i].mainHeader.style = mainHeader.style)
+        : twoPictures.twoPictureArray[i].mainHeader.style;
+    }
+  } else if (paragraphs?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      paragraphs
+        ? (twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style)
+        : twoPictures.twoPictureArray[i].paragraphs.style;
+    }
+  }
+  img
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].img = img)
+    : twoPictures.twoPictureArray[workTeamBarIndex].img;
+  mainHeader
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].mainHeader = mainHeader)
+    : twoPictures.twoPictureArray[workTeamBarIndex].mainHeader;
+  subHeaders
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].subHeaders = subHeaders)
+    : twoPictures.twoPictureArray[workTeamBarIndex].subHeaders;
+  buttons
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].buttons = buttons)
+    : twoPictures.twoPictureArray[workTeamBarIndex].buttons;
+  paragraphs
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].paragraphs = paragraphs)
+    : twoPictures.twoPictureArray[workTeamBarIndex].paragraphs;
+
+  await TwoPicture.findByIdAndUpdate(twoPicturesId, twoPictures, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
 //Add items into ProgressBar
 const addProgressBar = async (req, res) => {
   const { id: twoPicturesId } = req.params;
@@ -448,4 +565,6 @@ module.exports = {
   searchNews,
   getNews,
   editExplanationBar,
+  editWorkTeamBar,
+  editTwoPictureStyle,
 };
