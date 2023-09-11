@@ -225,6 +225,96 @@ const editTwoPictureStyle = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
+//edit two picture with index
+const editTwoPictureIndexStyle = async (req, res) => {
+  const { twoPicturesId, index } = req.params;
+  const { container } = req.body;
+
+  const {
+    img,
+    header,
+    paragraphs,
+    mainHeader,
+    buttons,
+    name,
+    lastName,
+    title,
+  } = container[0];
+
+  // Retrieve the TwoPicture document
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  if (header?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      header
+        ? (twoPictures.twoPictureArray[i].header.style = header.style)
+        : twoPictures.twoPictureArray[i].header.style;
+    }
+  } else if (mainHeader?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      mainHeader
+        ? (twoPictures.twoPictureArray[i].mainHeader.style = mainHeader.style)
+        : twoPictures.twoPictureArray[i].mainHeader.style;
+    }
+  } else if (paragraphs && paragraphs?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
+    }
+  } else if (name?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      name
+        ? (twoPictures.twoPictureArray[i].name.style = name.style)
+        : twoPictures.twoPictureArray[i].name.style;
+    }
+  } else if (lastName?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      lastName
+        ? (twoPictures.twoPictureArray[i].lastName.style = lastName.style)
+        : twoPictures.twoPictureArray[i].lastName.style;
+    }
+  } else if (title?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      title
+        ? (twoPictures.twoPictureArray[i].title.style = title.style)
+        : twoPictures.twoPictureArray[i].title.style;
+    }
+  }
+  img
+    ? (twoPictures.twoPictureArray[index].img = img)
+    : twoPictures.twoPictureArray[index].img;
+  mainHeader
+    ? (twoPictures.twoPictureArray[index].mainHeader = mainHeader)
+    : twoPictures.twoPictureArray[index].mainHeader;
+  header
+    ? (twoPictures.twoPictureArray[index].header = header)
+    : twoPictures.twoPictureArray[index].header;
+  buttons
+    ? (twoPictures.twoPictureArray[index].buttons = buttons)
+    : twoPictures.twoPictureArray[index].buttons;
+  paragraphs
+    ? (twoPictures.twoPictureArray[index].paragraphs = paragraphs)
+    : twoPictures.twoPictureArray[index].paragraphs;
+  name
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].name = name)
+    : twoPictures.twoPictureArray[workTeamBarIndex].name;
+  lastName
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].lastName = lastName)
+    : twoPictures.twoPictureArray[workTeamBarIndex].lastName;
+  title
+    ? (twoPictures.twoPictureArray[workTeamBarIndex].title = title)
+    : twoPictures.twoPictureArray[workTeamBarIndex].title;
+
+  await TwoPicture.findByIdAndUpdate(twoPicturesId, twoPictures, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
 
 //edit workTeam bar
 const editWorkTeamBar = async (req, res) => {
@@ -567,4 +657,5 @@ module.exports = {
   editExplanationBar,
   editWorkTeamBar,
   editTwoPictureStyle,
+  editTwoPictureIndexStyle,
 };
