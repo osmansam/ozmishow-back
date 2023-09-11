@@ -24,6 +24,7 @@ const {
   editWorkTeamBar,
   editTwoPictureStyle,
   editTwoPictureIndexStyle,
+  editResumeBox,
 } = require("../controllers/twoPictureController");
 
 router.route("/").post(createTwoPictures).get(getAllTwoPictures);
@@ -49,6 +50,7 @@ router
 router
   .route("/editTwoPictureIndexStyle/:twoPicturesId/:index")
   .patch(editTwoPictureIndexStyle);
+router.route("/editResumeBox/:twoPicturesId/:index").patch(editResumeBox);
 router.route("/editTwoPictureStyle/:twoPicturesId/").patch(editTwoPictureStyle);
 router.route("/:page").get(getPageTwoPictures);
 router.route("/:id").patch(updateTwoPictures).delete(deleteTwoPictures);
