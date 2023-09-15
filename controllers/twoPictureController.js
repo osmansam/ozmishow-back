@@ -41,7 +41,6 @@ const updateTwoPictures = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ twoPictures });
 };
-
 // delete two pictures
 const deleteTwoPictures = async (req, res) => {
   const { id: twoPicturesId } = req.params;
@@ -171,6 +170,23 @@ const editExplanationBar = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
 };
+//edit mainMainHeader
+const editMainMainHeader = async (req, res) => {
+  const { twoPicturesId } = req.params;
+  const { mainHeader } = req.body;
+  const twoPictures = await TwoPicture.findOneAndUpdate(
+    { _id: twoPicturesId },
+    { mainHeader: mainHeader },
+    { new: true, runValidators: true }
+  );
+  if (!twoPictures) {
+    throw new CustomError.NotFoundError(
+      `No two pictures with id: ${twoPicturesId}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+
 // edit two picture for style
 const editTwoPictureStyle = async (req, res) => {
   const { twoPicturesId } = req.params;
@@ -408,6 +424,18 @@ const editResumeBox = async (req, res) => {
   });
 
   res.status(StatusCodes.OK).json({ data: twoPictures });
+};
+//edit componentStyle
+const editComponentStyle = async (req, res) => {
+  const { twoPicturesId } = req.params;
+  const { componentStyle, componentType } = req.body;
+  console.log(req.body);
+  const twoPicture = await TwoPicture.findOneAndUpdate(
+    { _id: twoPicturesId },
+    { style: componentStyle, componentType: componentType },
+    { new: true, runValidators: true }
+  );
+  res.status(StatusCodes.OK).json({ data: twoPicture });
 };
 
 //Add items into ProgressBar
@@ -662,7 +690,20 @@ const getNews = async (req, res) => {
     totalItems: twoPictures.twoPictureArray.length,
   });
 };
+const deneme = async (req, res) => {
+  // Update all documents in the TwoPicture collection
+  await TwoPicture.updateMany(
+    {},
+    {
+      $set: {
+        componentType: "type1",
+      },
+    },
+    { new: true, runValidators: true }
+  );
 
+  res.status(StatusCodes.OK).json({ message: "deneme" });
+};
 module.exports = {
   getPageTwoPictures,
   getAllTwoPictures,
@@ -686,5 +727,8 @@ module.exports = {
   editWorkTeamBar,
   editTwoPictureStyle,
   editTwoPictureIndexStyle,
+  editComponentStyle,
   editResumeBox,
+  editMainMainHeader,
+  deneme,
 };

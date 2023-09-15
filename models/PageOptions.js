@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const PageStyle = require("./PageStyle");
 const PageOptionsSchema = new mongoose.Schema({
   pageNameTR: {
     type: String,
@@ -41,6 +41,7 @@ const PageOptionsSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  pageStyle: PageStyle.schema,
 });
 
 module.exports = mongoose.model("PageOptions", PageOptionsSchema);

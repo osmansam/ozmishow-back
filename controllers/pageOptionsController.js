@@ -68,13 +68,53 @@ const deletePage = async (req, res) => {
   }
   res.status(StatusCodes.OK).send();
 };
+//update PageOptions
+const updatePageOptions = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const page = await PageOptions.findOne({ _id: id });
 
+    if (!page) {
+      throw new CustomError.NotFoundError(`No page with id : ${id}`);
+    }
+
+    // Update the subdocument pageStyle
+    page.pageStyle = { ...req.body.style };
+    await page.save();
+
+    res.status(StatusCodes.OK).json({ page });
+  } catch (error) {
+    // Handle errors here
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
+  }
+};
+
+const deneme = async (req, res) => {
+  const page = await PageOptions.updateMany(
+    {},
+    {
+      $set: {
+        pageStyle: {
+          backgroundColor: "",
+        },
+      },
+    },
+    { new: true, runValidators: true }
+  );
+
+  res.status(StatusCodes.OK).send("ok");
+};
 module.exports = {
   getPageOptions,
   createPageOptions,
   createNavbar,
+  updatePageOptions,
   getNavbar,
   createFooter,
   getFooter,
   deletePage,
+  deneme,
 };
