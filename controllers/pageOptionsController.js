@@ -77,12 +77,25 @@ const updatePageOptions = async (req, res) => {
     if (!page) {
       throw new CustomError.NotFoundError(`No page with id : ${id}`);
     }
+    if (req.body.style.effectAll) {
+      await PageOptions.updateMany(
+        {},
+        {
+          $set: {
+            pageStyle: req.body.style,
+          },
+        },
+        { new: true, runValidators: true }
+      );
 
-    // Update the subdocument pageStyle
-    page.pageStyle = { ...req.body.style };
-    await page.save();
+      res.status(StatusCodes.OK).message("ok");
+    } else {
+      // Update the subdocument pageStyle
+      page.pageStyle = { ...req.body.style };
+      await page.save();
 
-    res.status(StatusCodes.OK).json({ page });
+      res.status(StatusCodes.OK).json({ page });
+    }
   } catch (error) {
     // Handle errors here
     console.error(error);

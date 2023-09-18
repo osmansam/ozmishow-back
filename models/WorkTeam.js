@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const ElementStyle = require("./ElementStyle");
+const ImageStyle = require("./ImageStyle");
 
 const WorkTeamBarSchema = new mongoose.Schema({
-  img: { type: String },
+  img: { content: { type: String }, style: ImageStyle.schema },
+
   subHeaders: {
     content: [String],
     style: ElementStyle.schema, // Common style for all paragraphs},

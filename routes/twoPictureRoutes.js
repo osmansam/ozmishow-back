@@ -27,6 +27,7 @@ const {
   editMainMainHeader,
   editResumeBox,
   editComponentStyle,
+  getReadMe,
   deneme,
 } = require("../controllers/twoPictureController");
 
@@ -45,6 +46,7 @@ router.route("/updateWorkTeamBar/:id").patch(addWorkTeamBar);
 router.route("/deneme").get(deneme);
 router.route("/updatePageAndLanguage/:id").patch(updatePageAndLanguage);
 router.route("/editMainMainHeader/:twoPicturesId").patch(editMainMainHeader);
+router.route("/getReadMe/:twoPicturesId/:index").get(getReadMe);
 router.route("/deleteItem/:id/:itemId").patch(deleteItemInContainer);
 router
   .route("/editExplanationBar/:twoPicturesId/:explanationBarId")

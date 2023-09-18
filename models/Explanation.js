@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const ElementStyle = require("./ElementStyle");
+const ImageStyle = require("./ImageStyle");
 
 const ExplanationBarSchema = new mongoose.Schema({
-  img: { type: String },
+  img: { content: { type: String }, style: ImageStyle.schema },
+
   mainHeader: {
     content: { type: String },
     style: ElementStyle.schema, // Use ElementStyle schema for style

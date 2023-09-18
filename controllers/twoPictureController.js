@@ -146,6 +146,10 @@ const editExplanationBar = async (req, res) => {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
     }
+  } else if (img && img?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].img.style = img.style;
+    }
   }
   img
     ? (twoPictures.twoPictureArray[explanationBarIndex].img = img)
@@ -217,6 +221,10 @@ const editTwoPictureStyle = async (req, res) => {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
     }
+  } else if (img && img?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].img.style = img.style;
+    }
   }
   img
     ? (twoPictures.twoPictureArray[0].img = img)
@@ -269,6 +277,10 @@ const editTwoPictureIndexStyle = async (req, res) => {
   } else if (paragraphs && paragraphs?.style?.effectAll) {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style;
+    }
+  } else if (img && img?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].img.style = img.style;
     }
   }
   img
@@ -336,6 +348,12 @@ const editWorkTeamBar = async (req, res) => {
       paragraphs
         ? (twoPictures.twoPictureArray[i].paragraphs.style = paragraphs.style)
         : twoPictures.twoPictureArray[i].paragraphs.style;
+    }
+  } else if (img?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      img
+        ? (twoPictures.twoPictureArray[i].img.style = img.style)
+        : twoPictures.twoPictureArray[i].img.style;
     }
   }
   img
@@ -429,7 +447,6 @@ const editResumeBox = async (req, res) => {
 const editComponentStyle = async (req, res) => {
   const { twoPicturesId } = req.params;
   const { componentStyle, componentType } = req.body;
-  console.log(req.body);
   const twoPicture = await TwoPicture.findOneAndUpdate(
     { _id: twoPicturesId },
     { style: componentStyle, componentType: componentType },
@@ -690,6 +707,16 @@ const getNews = async (req, res) => {
     totalItems: twoPictures.twoPictureArray.length,
   });
 };
+//get ReadMe
+const getReadMe = async (req, res) => {
+  const { twoPicturesId, index } = req.params;
+
+  const twoPictures = await TwoPicture.findById(twoPicturesId);
+
+  const readMe = twoPictures.twoPictureArray[index];
+  res.status(StatusCodes.OK).json({ ...readMe });
+};
+
 const deneme = async (req, res) => {
   // Update all documents in the TwoPicture collection
   await TwoPicture.updateMany(
@@ -730,5 +757,6 @@ module.exports = {
   editComponentStyle,
   editResumeBox,
   editMainMainHeader,
+  getReadMe,
   deneme,
 };

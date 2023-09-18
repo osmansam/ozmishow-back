@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const ElementStyle = require("./ElementStyle");
+const ImageStyle = require("./ImageStyle");
 
 const SliderSchema = new mongoose.Schema({
-  img: { type: String },
+  img: { content: { type: String }, style: ImageStyle.schema },
+
   header: {
     content: { type: String },
     style: ElementStyle.schema, // Use ElementStyle schema for style
