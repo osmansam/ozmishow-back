@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const ElementStyle = require("./ElementStyle");
 const ComponentStyle = require("./ComponentStyle");
+
 const TwoPictureSchema = new mongoose.Schema({
   page: {
     type: String,
