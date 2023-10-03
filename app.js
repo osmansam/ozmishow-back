@@ -7,7 +7,7 @@ const path = require("path");
 const app = express();
 
 // rest of the packages
-const morgan = require("morgan");
+
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const rateLimiter = require("express-rate-limit");
@@ -15,7 +15,6 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
-const { authenticateUser } = require("./middleware/authentication");
 
 // database
 const connectDB = require("./db/connect");
@@ -31,6 +30,8 @@ const twoPictureRouter = require("./routes/twoPictureRoutes");
 const pageOptionsRouter = require("./routes/pageOptionsRoute");
 const authRouter = require("./routes/authRoutes");
 const containerRouter = require("./routes/containerRoutes");
+const denemeRouter = require("./routes/denemeRoutes");
+const dynamicModelRouter = require("./routes/dynamicModelRoutes");
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -50,6 +51,8 @@ app.use("/api/v1/twoPicture", twoPictureRouter);
 app.use("/api/v1/pageOptions", pageOptionsRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/container", containerRouter);
+app.use("/api/v1/deneme", denemeRouter);
+app.use("/api/v1/dynamicModel", dynamicModelRouter);
 
 // Handle client-side routing
 app.get("*", (req, res) => {
