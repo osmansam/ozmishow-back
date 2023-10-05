@@ -152,10 +152,67 @@ const updateDynamicModelItem = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ item });
 };
+// update an item with an image
+const updateDynamicModelItemWithImage = async (req, res) => {
+  const { schemaName, id } = req.query;
+  const dynamicModel = await DynamicModel.findOne({ name: schemaName });
+  if (!dynamicModel) {
+    return res.status(404).json({ error: "Model not found" });
+  }
+  let CurrentModel;
+  const Models = mongoose.models;
+  if (!(schemaName in Models)) {
+    CurrentModel = mongoose.model(schemaName, dynamicModel.schema);
+  } else {
+    CurrentModel = mongoose.model(schemaName);
+  }
+  // finding which items isImage
+  const schemaArray = Object.keys(dynamicModel.schema).map((key) => ({
+    name: key,
+    ...dynamicModel.schema[key],
+  }));
+
+  const imgItems = schemaArray
+    .filter((item) => item.isImage === true)
+    .map((item) => item.name);
+
+  const imgUrls = {}; // Initialize an object to store the results
+
+  // Process each image item
+  await Promise.all(
+    imgItems.map(async (imageItem) => {
+      if (req.files && req.files[imageItem]) {
+        const tempFilePath = req.files[imageItem].tempFilePath;
+
+        // Upload the image to Cloudinary
+        const result = await cloudinary.uploader.upload(tempFilePath);
+
+        // Store the secure_url in the object with the image item name as the key
+        imgUrls[imageItem] = result.secure_url;
+      }
+    })
+  );
+
+  const item = await CurrentModel.findOneAndUpdate(
+    { _id: id },
+    {
+      ...req.body,
+      ...imgUrls,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!item) {
+    throw new CustomError.NotFoundError(`Item with id ${id} not found`);
+  }
+  res.status(StatusCodes.OK).json({ item });
+};
 // Load and use dynamic models
 const getDynamicModelItems = async (req, res) => {
   try {
-    const { schemaName, populate } = req.query;
+    const { schemaName } = req.query;
 
     // Load the schema definition from the DynamicModel collection
     const dynamicModel = await DynamicModel.findOne({ name: schemaName });
@@ -174,15 +231,22 @@ const getDynamicModelItems = async (req, res) => {
     } else {
       CurrentModel = mongoose.model(schemaName);
     }
-
-    const populateFields = populate ? populate?.split(",").join(" ") : [];
-    if (populateFields.length > 0) {
-      items = await CurrentModel.find().populate(populateFields);
+    const populateFileds = Object.keys(dynamicModel.schema)
+      .map((key) => ({
+        name: key,
+        ...dynamicModel.schema[key],
+      }))
+      .filter((item) => item.type === "ObjectId")
+      .map((item) => item.name);
+    let items;
+    if (populateFileds.length > 0) {
+      console.log(populateFileds);
+      items = await CurrentModel.find().populate(populateFileds);
     } else {
       items = await CurrentModel.find();
     }
 
-    res.status(200).json({ items });
+    res.status(200).json({ items, schemaName });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
@@ -202,8 +266,23 @@ const getDynamicModelByItem = async (req, res) => {
   } else {
     CurrentModel = mongoose.model(schemaName);
   }
-  const items = await CurrentModel.find({ [getFor]: value });
-  res.status(StatusCodes.OK).json({ items });
+  const populateFileds = Object.keys(dynamicModel.schema)
+    .map((key) => ({
+      name: key,
+      ...dynamicModel.schema[key],
+    }))
+    .filter((item) => item.type === "ObjectId")
+    .map((item) => item.name);
+  let items;
+  if (populateFileds.length > 0) {
+    items = await CurrentModel.find({ [getFor]: value }).populate(
+      populateFileds
+    );
+  } else {
+    items = await CurrentModel.find({ [getFor]: value });
+  }
+
+  res.status(StatusCodes.OK).json({ items, schemaName });
 };
 // search for a specific item
 // Define a reusable function to filter items based on a search query
@@ -241,12 +320,30 @@ const handleSearch = async (req, res) => {
   }
 
   // Get items from the CurrentModel (your dynamic model)
-  const items = await CurrentModel.find();
+  const populateFileds = Object.keys(dynamicModel.schema)
+    .map((key) => ({
+      name: key,
+      ...dynamicModel.schema[key],
+    }))
+    .filter((item) => item.type === "ObjectId")
+    .map((item) => item.name);
+  let items;
+  if (populateFileds.length > 0) {
+    items = await CurrentModel.find().populate(populateFileds);
+  } else {
+    items = await CurrentModel.find();
+  }
 
   // Apply filtering using the filterItems function
   const filteredItems = filterItems(items, searchQuery);
 
-  res.status(StatusCodes.OK).json({ items: filteredItems });
+  res.status(StatusCodes.OK).json({ items: filteredItems, schemaName });
+};
+
+const artik = async (req, res) => {
+  const { schemaName } = req.query;
+  await mongoose.connection.db.dropCollection(schemaName);
+  res.json({ message: "ok" });
 };
 
 module.exports = {
@@ -257,5 +354,7 @@ module.exports = {
   updateDynamicModelItem,
   getDynamicModelByItem,
   createDynamicModelItemWithImage,
+  updateDynamicModelItemWithImage,
   handleSearch,
+  artik,
 };

@@ -9,7 +9,9 @@ const {
   deleteDynamicModelItem,
   getDynamicModelByItem,
   createDynamicModelItemWithImage,
+  updateDynamicModelItemWithImage,
   handleSearch,
+  artik,
 } = require("../controllers/denemeController");
 
 router.route("/").post(createDynamicModel).get(getDynamicModelItems);
@@ -19,6 +21,10 @@ router
   .delete(deleteDynamicModelItem)
   .patch(updateDynamicModelItem)
   .get(getDynamicModelByItem);
-router.route("/item/image").post(createDynamicModelItemWithImage);
+router
+  .route("/item/image")
+  .post(createDynamicModelItemWithImage)
+  .patch(updateDynamicModelItemWithImage);
+router.route("/oylesine").get(artik);
 router.route("/search").get(handleSearch);
 module.exports = router;

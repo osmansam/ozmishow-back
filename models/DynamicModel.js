@@ -4,7 +4,7 @@ const DynamicModelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   schema: { type: Object, required: true }, // Store schema definitions as an object
   pageName: { type: String },
-  columns: { type: [String] }, // Use an array for string values
+  columns: { type: Object },
   rowKeys: { type: [String] }, // Use an array for string values
   isPage: { type: Boolean },
   addButtonName: { type: String },
