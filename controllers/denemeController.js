@@ -34,7 +34,6 @@ const createDynamicModel = async (req, res) => {
 };
 // create an item for a dynamic model
 const createDynamicModelItem = async (req, res) => {
-  console.log(req.body);
   const { schemaName } = req.query;
   const dynamicModel = await DynamicModel.findOne({ name: schemaName });
   if (!dynamicModel) {
@@ -57,6 +56,8 @@ const createDynamicModelItem = async (req, res) => {
 };
 //create a dynamic model with image
 const createDynamicModelItemWithImage = async (req, res) => {
+  console.log(req.body);
+
   const { schemaName } = req.query;
   const dynamicModel = await DynamicModel.findOne({ name: schemaName });
   if (!dynamicModel) {
@@ -246,16 +247,13 @@ const getDynamicModelItems = async (req, res) => {
           const populateModel = await DynamicModel.findOne({
             name: item,
           });
-          console.log(populateModel);
-          console.log(item);
+
           // console.log(item.capitalize());
           if (populateModel && !(item in Models)) {
-            console.log("burada");
             mongoose.model(item, populateModel.schema);
           }
         })
       );
-      console.log(Models);
       items = await CurrentModel.find().populate(populateFileds);
     } else {
       items = await CurrentModel.find();
@@ -288,6 +286,21 @@ const getDynamicModelByItem = async (req, res) => {
     }))
     .filter((item) => item.type === "ObjectId")
     .map((item) => item.name);
+
+  if (populateFileds.length > 0) {
+    await Promise.all(
+      populateFileds.map(async (item) => {
+        const populateModel = await DynamicModel.findOne({
+          name: item,
+        });
+
+        // console.log(item.capitalize());
+        if (populateModel && !(item in Models)) {
+          mongoose.model(item, populateModel.schema);
+        }
+      })
+    );
+  }
   let items;
   if (populateFileds.length > 0) {
     items = await CurrentModel.find({ [getFor]: value }).populate(
@@ -342,6 +355,21 @@ const handleSearch = async (req, res) => {
     }))
     .filter((item) => item.type === "ObjectId")
     .map((item) => item.name);
+
+  if (populateFileds.length > 0) {
+    await Promise.all(
+      populateFileds.map(async (item) => {
+        const populateModel = await DynamicModel.findOne({
+          name: item,
+        });
+
+        // console.log(item.capitalize());
+        if (populateModel && !(item in Models)) {
+          mongoose.model(item, populateModel.schema);
+        }
+      })
+    );
+  }
   let items;
   if (populateFileds.length > 0) {
     items = await CurrentModel.find().populate(populateFileds);
