@@ -34,6 +34,7 @@ const createDynamicModel = async (req, res) => {
 };
 // create an item for a dynamic model
 const createDynamicModelItem = async (req, res) => {
+  console.log(req.body);
   const { schemaName } = req.query;
   const dynamicModel = await DynamicModel.findOne({ name: schemaName });
   if (!dynamicModel) {
@@ -240,7 +241,21 @@ const getDynamicModelItems = async (req, res) => {
       .map((item) => item.name);
     let items;
     if (populateFileds.length > 0) {
-      console.log(populateFileds);
+      await Promise.all(
+        populateFileds.map(async (item) => {
+          const populateModel = await DynamicModel.findOne({
+            name: item,
+          });
+          console.log(populateModel);
+          console.log(item);
+          // console.log(item.capitalize());
+          if (populateModel && !(item in Models)) {
+            console.log("burada");
+            mongoose.model(item, populateModel.schema);
+          }
+        })
+      );
+      console.log(Models);
       items = await CurrentModel.find().populate(populateFileds);
     } else {
       items = await CurrentModel.find();
