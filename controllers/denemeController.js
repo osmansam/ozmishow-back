@@ -315,18 +315,28 @@ const getDynamicModelByItem = async (req, res) => {
 // search for a specific item
 // Define a reusable function to filter items based on a search query
 const filterItems = (items, searchQuery) => {
-  return items.filter((item) => {
-    // Create an array of field values from the item
-    const itemFields = Object.values(item._doc);
+  const checkStringMatch = (value, query) => {
+    return (
+      typeof value === "string" &&
+      value.toLowerCase().includes(query.toLowerCase())
+    );
+  };
 
-    // Check if any of the field values match the search query
-    return itemFields.some((field) => {
-      if (typeof field === "string") {
-        return field.toLowerCase().includes(searchQuery.toLowerCase());
+  const checkObjectForMatch = (object, query, depth = 0) => {
+    if (depth > 5) return false; // To prevent infinite loops in deep objects
+
+    return Object.values(object).some((value) => {
+      if (checkStringMatch(value, query)) {
+        return true;
       }
-      return false; // Adjust as needed for non-string fields
+      if (typeof value === "object" && value !== null) {
+        return checkObjectForMatch(value, query, depth + 1);
+      }
+      return false;
     });
-  });
+  };
+
+  return items.filter((item) => checkObjectForMatch(item._doc, searchQuery));
 };
 
 // Your handleSearch function
