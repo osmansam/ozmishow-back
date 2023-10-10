@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const DynamicModel = require("../models/DynamicModel");
 const { StatusCodes } = require("http-status-codes");
 const cloudinary = require("cloudinary").v2;
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require("../middleware/authentication");
 // Create a dynamic model based on user input
 const createDynamicModel = async (req, res) => {
   try {
@@ -15,6 +19,20 @@ const createDynamicModel = async (req, res) => {
     const schemaFields = {
       ...dynamicFields,
     };
+    const authValues = {
+      isAuthanticated: false,
+      isAuthorized: false,
+    };
+    const routes = {
+      createDynamicModelItem: authValues,
+      createDynamicModelItemWithImage: authValues,
+      getDynamicModelItems: authValues,
+      getDynamicModelByItem: authValues,
+      updateDynamicModelItem: authValues,
+      updateDynamicModelItemWithImage: authValues,
+      deleteDynamicModelItem: authValues,
+      handleSearch: authValues,
+    };
 
     // Save the model definition in the DynamicModel collection
     await DynamicModel.create({
@@ -23,6 +41,7 @@ const createDynamicModel = async (req, res) => {
       isPage: isPage,
       pageName: pageName,
       columns: columns,
+      routes: routes,
       rowKeys: rowKeys,
       addButtonName: addButtonName,
     }); // Respond with success
@@ -32,6 +51,7 @@ const createDynamicModel = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
 // create an item for a dynamic model
 const createDynamicModelItem = async (req, res) => {
   const { schemaName } = req.query;
@@ -56,8 +76,6 @@ const createDynamicModelItem = async (req, res) => {
 };
 //create a dynamic model with image
 const createDynamicModelItemWithImage = async (req, res) => {
-  console.log(req.body);
-
   const { schemaName } = req.query;
   const dynamicModel = await DynamicModel.findOne({ name: schemaName });
   if (!dynamicModel) {
@@ -224,6 +242,7 @@ const getDynamicModelItems = async (req, res) => {
         .status(404)
         .json({ error: `Schema "${schemaName}" not found` });
     }
+
     let CurrentModel;
     const Models = mongoose.models;
     if (!(schemaName in Models)) {
@@ -248,7 +267,6 @@ const getDynamicModelItems = async (req, res) => {
             name: item,
           });
 
-          // console.log(item.capitalize());
           if (populateModel && !(item in Models)) {
             mongoose.model(item, populateModel.schema);
           }
@@ -294,7 +312,6 @@ const getDynamicModelByItem = async (req, res) => {
           name: item,
         });
 
-        // console.log(item.capitalize());
         if (populateModel && !(item in Models)) {
           mongoose.model(item, populateModel.schema);
         }
@@ -373,7 +390,6 @@ const handleSearch = async (req, res) => {
           name: item,
         });
 
-        // console.log(item.capitalize());
         if (populateModel && !(item in Models)) {
           mongoose.model(item, populateModel.schema);
         }

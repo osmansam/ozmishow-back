@@ -3,8 +3,10 @@ const router = express.Router();
 
 const {
   getAllDynamicModels,
+  updateDynamicModel,
+  oylesine,
 } = require("./../controllers/dynamicModelController");
 
-router.route("/").get(getAllDynamicModels);
+router.route("/").get(getAllDynamicModels).patch(updateDynamicModel);
 
 module.exports = router;

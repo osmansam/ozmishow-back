@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { conditionalAuthentication } = require("../middleware/conditionalAuth");
 const {
   createDynamicModel,
   getDynamicModelItems,
@@ -14,17 +14,41 @@ const {
   artik,
 } = require("../controllers/denemeController");
 
-router.route("/").post(createDynamicModel).get(getDynamicModelItems);
+router
+  .route("/")
+  .post(createDynamicModel)
+  .get(conditionalAuthentication("getDynamicModelItems"), getDynamicModelItems);
+
 router
   .route("/item")
-  .post(createDynamicModelItem)
-  .delete(deleteDynamicModelItem)
-  .patch(updateDynamicModelItem)
-  .get(getDynamicModelByItem);
+  .post(
+    conditionalAuthentication("createDynamicModelItem"),
+    createDynamicModelItem
+  )
+  .delete(
+    conditionalAuthentication("deleteDynamicModelItem"),
+    deleteDynamicModelItem
+  )
+  .patch(
+    conditionalAuthentication("updateDynamicModelItem"),
+    updateDynamicModelItem
+  )
+  .get(
+    conditionalAuthentication("getDynamicModelByItem"),
+    getDynamicModelByItem
+  );
 router
   .route("/item/image")
-  .post(createDynamicModelItemWithImage)
-  .patch(updateDynamicModelItemWithImage);
+  .post(
+    conditionalAuthentication("createDynamicModelItemWithImage"),
+    createDynamicModelItemWithImage
+  )
+  .patch(
+    conditionalAuthentication("updateDynamicModelItemWithImage"),
+    updateDynamicModelItemWithImage
+  );
 router.route("/oylesine").get(artik);
-router.route("/search").get(handleSearch);
+router
+  .route("/search")
+  .get(conditionalAuthentication("handleSearch"), handleSearch);
 module.exports = router;
