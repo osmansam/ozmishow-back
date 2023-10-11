@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const math = require("mathjs");
 const DynamicModel = require("../models/DynamicModel");
 const { StatusCodes } = require("http-status-codes");
 const cloudinary = require("cloudinary").v2;
@@ -66,6 +67,28 @@ const createDynamicModelItem = async (req, res) => {
   } else {
     CurrentModel = mongoose.model(schemaName);
   }
+  const equations = Object.keys(dynamicModel.schema).filter(
+    (key) => dynamicModel.schema[key].isEquation
+  );
+  if (equations.length > 0) {
+    equations.forEach((equation) => {
+      let equationToEvaluate = dynamicModel.schema[equation].equation;
+      // Create a variable object with only number properties from req.body
+      const variables = {};
+      for (let key in req.body) {
+        if (dynamicModel.schema[key].type === "Number") {
+          variables[key] = req.body[key];
+        }
+      }
+      try {
+        // Evaluate the expression with mathjs using the variables
+        req.body[equation] = math.evaluate(equationToEvaluate, variables);
+      } catch (error) {
+        return res.status(400).json({ error: "Invalid equation" });
+      }
+    });
+  }
+
   const item = await CurrentModel.create(req.body);
   if (!item) {
     return res
@@ -112,7 +135,27 @@ const createDynamicModelItemWithImage = async (req, res) => {
       imgUrls[imageItem] = result.secure_url;
     })
   );
-
+  const equations = Object.keys(dynamicModel.schema).filter(
+    (key) => dynamicModel.schema[key].isEquation
+  );
+  if (equations.length > 0) {
+    equations.forEach((equation) => {
+      let equationToEvaluate = dynamicModel.schema[equation].equation;
+      // Create a variable object with only number properties from req.body
+      const variables = {};
+      for (let key in req.body) {
+        if (dynamicModel.schema[key].type === "Number") {
+          variables[key] = req.body[key];
+        }
+      }
+      try {
+        // Evaluate the expression with mathjs using the variables
+        req.body[equation] = math.evaluate(equationToEvaluate, variables);
+      } catch (error) {
+        return res.status(400).json({ error: "Invalid equation" });
+      }
+    });
+  }
   const item = await CurrentModel.create({ ...req.body, ...imgUrls });
   if (!item) {
     return res
