@@ -200,6 +200,28 @@ const updateDynamicModelItem = async (req, res) => {
   } else {
     CurrentModel = mongoose.model(schemaName);
   }
+  const equations = Object.keys(dynamicModel.schema).filter(
+    (key) => dynamicModel.schema[key].isEquation
+  );
+
+  if (equations.length > 0) {
+    equations.forEach((equation) => {
+      let equationToEvaluate = dynamicModel.schema[equation].equation;
+      // Create a variable object with only number properties from req.body
+      const variables = {};
+      for (let key in req.body) {
+        if (dynamicModel?.schema[key]?.type === "Number") {
+          variables[key] = req.body[key];
+        }
+      }
+      try {
+        // Evaluate the expression with mathjs using the variables
+        req.body[equation] = math.evaluate(equationToEvaluate, variables);
+      } catch (error) {
+        return res.status(400).json({ error: "Invalid equation" });
+      }
+    });
+  }
   const item = await CurrentModel.findOneAndUpdate(
     { _id: id },
     {
@@ -255,7 +277,27 @@ const updateDynamicModelItemWithImage = async (req, res) => {
       }
     })
   );
-
+  const equations = Object.keys(dynamicModel.schema).filter(
+    (key) => dynamicModel.schema[key].isEquation
+  );
+  if (equations.length > 0) {
+    equations.forEach((equation) => {
+      let equationToEvaluate = dynamicModel.schema[equation].equation;
+      // Create a variable object with only number properties from req.body
+      const variables = {};
+      for (let key in req.body) {
+        if (dynamicModel?.schema[key]?.type === "Number") {
+          variables[key] = req.body[key];
+        }
+      }
+      try {
+        // Evaluate the expression with mathjs using the variables
+        req.body[equation] = math.evaluate(equationToEvaluate, variables);
+      } catch (error) {
+        return res.status(400).json({ error: "Invalid equation" });
+      }
+    });
+  }
   const item = await CurrentModel.findOneAndUpdate(
     { _id: id },
     {
