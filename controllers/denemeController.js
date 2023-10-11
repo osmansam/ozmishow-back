@@ -3,10 +3,7 @@ const math = require("mathjs");
 const DynamicModel = require("../models/DynamicModel");
 const { StatusCodes } = require("http-status-codes");
 const cloudinary = require("cloudinary").v2;
-const {
-  authenticateUser,
-  authorizePermissions,
-} = require("../middleware/authentication");
+
 // Create a dynamic model based on user input
 const createDynamicModel = async (req, res) => {
   try {
@@ -80,6 +77,7 @@ const createDynamicModelItem = async (req, res) => {
           variables[key] = req.body[key];
         }
       }
+
       try {
         // Evaluate the expression with mathjs using the variables
         req.body[equation] = math.evaluate(equationToEvaluate, variables);
