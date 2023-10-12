@@ -12,7 +12,15 @@ const PictureSchema = new mongoose.Schema({
     content: [String],
     style: ElementStyle.schema, // Common style for all paragraphs},
   },
-  buttons: { type: [] },
+  buttons: {
+    type: [
+      {
+        content: { type: String },
+        style: ElementStyle.schema, // Common style for all buttons
+        link: { type: String },
+      },
+    ],
+  },
   date: { type: Date, default: Date.now },
 });
 

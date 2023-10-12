@@ -108,8 +108,8 @@ const addExplanationBar = async (req, res) => {
 //edit explanation bar
 const editExplanationBar = async (req, res) => {
   const { twoPicturesId, explanationBarId } = req.params;
-  const { img, header, paragraphs, mainHeader, buttons } =
-    req.body.container[0];
+  const { img, header, paragraphs, mainHeader, buttons, buttonIndex } =
+    container[0];
 
   // Retrieve the TwoPicture document
   const twoPictures = await TwoPicture.findById(twoPicturesId);
@@ -149,6 +149,12 @@ const editExplanationBar = async (req, res) => {
   } else if (img && img?.style?.effectAll) {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].img.style = img.style;
+    }
+  } else if (buttons && buttons?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].buttons.map(
+        (button) => (button.style = buttons.style)
+      );
     }
   }
   img
@@ -194,9 +200,11 @@ const editMainMainHeader = async (req, res) => {
 // edit two picture for style
 const editTwoPictureStyle = async (req, res) => {
   const { twoPicturesId } = req.params;
+
   const { container } = req.body;
 
-  const { img, header, paragraphs, mainHeader, buttons } = container[0];
+  const { img, header, paragraphs, mainHeader, buttons, buttonIndex } =
+    container[0];
 
   // Retrieve the TwoPicture document
   const twoPictures = await TwoPicture.findById(twoPicturesId);
@@ -225,6 +233,12 @@ const editTwoPictureStyle = async (req, res) => {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].img.style = img.style;
     }
+  } else if (buttons && buttons?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].buttons.map(
+        (button) => (button.style = buttons.style)
+      );
+    }
   }
   img
     ? (twoPictures.twoPictureArray[0].img = img)
@@ -236,8 +250,8 @@ const editTwoPictureStyle = async (req, res) => {
     ? (twoPictures.twoPictureArray[0].header = header)
     : twoPictures.twoPictureArray[0].header;
   buttons
-    ? (twoPictures.twoPictureArray[0].buttons = buttons)
-    : twoPictures.twoPictureArray[0].buttons;
+    ? (twoPictures.twoPictureArray[0].buttons[buttonIndex] = buttons)
+    : twoPictures.twoPictureArray[0].buttons[buttonIndex];
   paragraphs
     ? (twoPictures.twoPictureArray[0].paragraphs = paragraphs)
     : twoPictures.twoPictureArray[0].paragraphs;
@@ -252,8 +266,10 @@ const editTwoPictureStyle = async (req, res) => {
 //edit two picture with index
 const editTwoPictureIndexStyle = async (req, res) => {
   const { twoPicturesId, index } = req.params;
+
   const { container } = req.body;
-  const { img, header, paragraphs, mainHeader, buttons } = container[0];
+  const { img, header, paragraphs, mainHeader, buttons, buttonIndex } =
+    container[0];
 
   // Retrieve the TwoPicture document
   const twoPictures = await TwoPicture.findById(twoPicturesId);
@@ -282,6 +298,12 @@ const editTwoPictureIndexStyle = async (req, res) => {
     for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
       twoPictures.twoPictureArray[i].img.style = img.style;
     }
+  } else if (buttons && buttons?.style?.effectAll) {
+    for (let i = 0; i < twoPictures.twoPictureArray.length; i++) {
+      twoPictures.twoPictureArray[i].buttons.map(
+        (button) => (button.style = buttons.style)
+      );
+    }
   }
   img
     ? (twoPictures.twoPictureArray[index].img = img)
@@ -293,8 +315,8 @@ const editTwoPictureIndexStyle = async (req, res) => {
     ? (twoPictures.twoPictureArray[index].header = header)
     : twoPictures.twoPictureArray[index].header;
   buttons
-    ? (twoPictures.twoPictureArray[index].buttons = buttons)
-    : twoPictures.twoPictureArray[index].buttons;
+    ? (twoPictures.twoPictureArray[0].buttons[buttonIndex] = buttons)
+    : twoPictures.twoPictureArray[0].buttons[buttonIndex];
   paragraphs
     ? (twoPictures.twoPictureArray[index].paragraphs = paragraphs)
     : twoPictures.twoPictureArray[index].paragraphs;
@@ -356,6 +378,7 @@ const editWorkTeamBar = async (req, res) => {
         : twoPictures.twoPictureArray[i].img.style;
     }
   }
+
   img
     ? (twoPictures.twoPictureArray[workTeamBarIndex].img = img)
     : twoPictures.twoPictureArray[workTeamBarIndex].img;
