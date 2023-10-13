@@ -108,6 +108,8 @@ const addExplanationBar = async (req, res) => {
 //edit explanation bar
 const editExplanationBar = async (req, res) => {
   const { twoPicturesId, explanationBarId } = req.params;
+  const { container } = req.body;
+
   const { img, header, paragraphs, mainHeader, buttons } = container[0];
 
   // Retrieve the TwoPicture document
