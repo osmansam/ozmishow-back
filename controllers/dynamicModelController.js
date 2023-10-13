@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const DynamicModel = require("../models/DynamicModel");
-
+const mongoose = require("mongoose");
 //getAllDynamicModels
 const getAllDynamicModels = async (req, res) => {
   const data = await DynamicModel.find({});
@@ -23,6 +23,10 @@ const updateDynamicModel = async (req, res) => {
   if (!dynamicModel) {
     return res.status(StatusCodes.NOT_FOUND).json({ error: "Model not found" });
   }
+  // delete and recreate the model to update the schema
+  mongoose.deleteModel(dynamicModel.name);
+  mongoose.model(dynamicModel.name, dynamicModel.schema);
+
   res.status(StatusCodes.OK).json({ dynamicModel });
 };
 
