@@ -40,6 +40,7 @@ const createDynamicModel = async (req, res) => {
       pageName: pageName,
       columns: columns,
       routes: routes,
+      charts: {},
       rowKeys: rowKeys,
       addButtonName: addButtonName,
     }); // Respond with success
@@ -67,6 +68,7 @@ const createDynamicModelItem = async (req, res) => {
   const equations = Object.keys(dynamicModel.schema).filter(
     (key) => dynamicModel.schema[key].isEquation
   );
+
   if (equations.length > 0) {
     equations.forEach((equation) => {
       let equationToEvaluate = dynamicModel.schema[equation].equation;
