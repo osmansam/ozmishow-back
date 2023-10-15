@@ -43,7 +43,7 @@ const createDynamicModel = async (req, res) => {
       charts: {},
       rowKeys: rowKeys,
       addButtonName: addButtonName,
-    }); // Respond with success
+    });
     res.status(201).json({ message: "Dynamic model created successfully" });
   } catch (error) {
     console.error(error);
