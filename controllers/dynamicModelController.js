@@ -10,6 +10,7 @@ const getAllDynamicModels = async (req, res) => {
   }
 
   const Models = mongoose.models;
+  // when we get the dynamic models from the database, we need to create the models in mongoose
   data.forEach((dynamicModel) => {
     const schemaName = dynamicModel.name;
     if (!(schemaName in Models)) {
