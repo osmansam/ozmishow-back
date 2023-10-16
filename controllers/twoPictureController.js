@@ -696,12 +696,13 @@ const getMap = async (req, res) => {
 const searchNews = async (req, res) => {
   const { id: twoPicturesId } = req.params;
   const { searchQuery } = req.query;
+
   const twoPictures = await TwoPicture.findById(twoPicturesId);
 
   const formattedSearchQuery = searchQuery.toLowerCase();
 
   const news = twoPictures.twoPictureArray.filter((item) => {
-    const formattedHeader = item.header.toLowerCase();
+    const formattedHeader = item?.header?.content?.toLowerCase();
     return formattedHeader.includes(formattedSearchQuery);
   });
 
