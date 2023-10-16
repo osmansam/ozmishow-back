@@ -5,6 +5,17 @@ const mongoose = require("mongoose");
 //getAllDynamicModels
 const getAllDynamicModels = async (req, res) => {
   const data = await DynamicModel.find({});
+  if (!data) {
+    throw new CustomError.NotFoundError(`No dynamic models found`);
+  }
+
+  const Models = mongoose.models;
+  data.forEach((dynamicModel) => {
+    const schemaName = dynamicModel.name;
+    if (!(schemaName in Models)) {
+      mongoose.model(schemaName, dynamicModel.schema);
+    }
+  });
   res.status(StatusCodes.OK).json({ data });
 };
 //update dynamic model
